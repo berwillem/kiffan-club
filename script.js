@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Navbar Scroll Effect
     const nav = document.querySelector('nav');
-    
+
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             nav.classList.add('scrolled');
@@ -27,62 +27,64 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.addEventListener('scroll', revealFunction);
-    // Trigger once on load
     revealFunction();
 
     // 3. Form Submission Handling
     const form = document.getElementById('registrationForm');
-    
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const btn = form.querySelector('button[type="submit"]');
         const originalText = btn.innerHTML;
-        
-        // Change button state
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+
+        // Prevent double click
         btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
 
         // Get form data
-        const nom = document.getElementById('nom').value;
-        const prenom = document.getElementById('prenom').value;
-        const num = document.getElementById('telephone').value;
-        const adress = document.getElementById('adresse').value;
-        const univ = document.getElementById('ecole').value;
+        const nom = document.getElementById('nom').value.trim();
+        const prenom = document.getElementById('prenom').value.trim();
+        const num = document.getElementById('telephone').value.trim();
+        const adress = document.getElementById('adresse').value.trim();
+        const univ = document.getElementById('ecole').value.trim();
 
         try {
-            // Actual fetch request to Google Apps Script
             await fetch("https://script.google.com/macros/s/AKfycbzF3UKTS1hu3YtsK3kA0UzBBDvzoDjAW5J6Lxbn5q9P12c1wf1KI2nwac3pI74p-F-31A/exec", {
                 method: "POST",
+                mode: "no-cors",
                 body: new URLSearchParams({
-                    nom: nom,
-                    prenom: prenom,
-                    num: num,
-                    adress: adress,
-                    univ: univ
+                    nom,
+                    prenom,
+                    num,
+                    adress,
+                    univ
                 })
             });
 
-            // Success state - SweetAlert2 Pop up
+            // IMPORTANT:
+            // This only means "request sent", NOT confirmed success
             Swal.fire({
-                title: 'Inscription réussie !',
-                text: 'Vos informations ont été enregistrées avec succès. Préparez votre carte étudiante pour le jour J !',
+                title: 'Formulaire envoyé !',
+                text: 'Vos informations ont bien été envoyées.',
                 icon: 'success',
                 confirmButtonColor: '#00a8ff',
-                confirmButtonText: 'Super !'
+                confirmButtonText: 'OK'
             });
 
             form.reset();
+
         } catch (error) {
             console.error('Error submitting form:', error);
+
             Swal.fire({
-                title: 'Oups...',
-                text: 'Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.',
+                title: 'Erreur',
+                text: 'Impossible d’envoyer le formulaire. Vérifiez votre connexion et réessayez.',
                 icon: 'error',
                 confirmButtonColor: '#ff3366'
             });
+
         } finally {
-            // Revert button
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
@@ -92,14 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
+
             const targetId = this.getAttribute('href');
-            
-            if(targetId === '#') return;
-            
+            if (targetId === '#') return;
+
             const targetElement = document.querySelector(targetId);
-            
+
             if (targetElement) {
-                // Offset for fixed header
                 const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
