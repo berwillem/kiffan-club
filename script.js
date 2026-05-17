@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const univ = document.getElementById('ecole').value.trim();
 
         try {
-            await fetch("https://script.google.com/macros/s/AKfycbzF3UKTS1hu3YtsK3kA0UzBBDvzoDjAW5J6Lxbn5q9P12c1wf1KI2nwac3pI74p-F-31A/exec", {
+            await fetch("https://script.google.com/macros/s/AKfycbzesx4mVuj9ibE2nJMN4dMXKvgtxsYd4e0i8daHlVN35yKj7tx4Y7gedq0GUMiXH4aDKg/exec", {
                 method: "POST",
                 mode: "no-cors",
                 body: new URLSearchParams({
